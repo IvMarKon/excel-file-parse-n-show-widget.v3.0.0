@@ -3,7 +3,7 @@
 import { app, protocol, BrowserWindow } from 'electron';
 import {
   createProtocol,
-  installVueDevtools
+  installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -13,7 +13,7 @@ let win: BrowserWindow | null;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } }
+  { scheme: 'app', privileges: { secure: true, standard: true } },
 ]);
 
 function createWindow() {
@@ -22,8 +22,8 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
 
   win.setMenuBarVisibility(false);
@@ -86,7 +86,7 @@ app.on('ready', async () => {
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
-    process.on('message', data => {
+    process.on('message', (data) => {
       if (data === 'graceful-exit') {
         app.quit();
       }
