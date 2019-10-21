@@ -40,6 +40,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import "@fortawesome/fontawesome-free/css/all.css";
 
+import excelParser from ''
+
 @Component({})
 export default class HelloWorld extends Vue {
   public drawer: any = false;
