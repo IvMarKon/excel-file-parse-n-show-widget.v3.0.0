@@ -1,3 +1,5 @@
+import * as http from 'http';
+
 import * as Excel from 'exceljs';
 
 const titleNames = [
@@ -63,4 +65,26 @@ const readAndParseEcxel = async (fileName: string) => {
   return response;
 };
 
-export default readAndParseEcxel;
+http.createServer((request, response) => {
+  const { headers, method, url } = request;
+  let body = [];
+  request.on('error', (err) => {
+    console.error(err);
+  }).on('data', (chunk) => {
+    body.push(chunk);
+  }).on('end', () => {
+    response.on('error', (err) => {
+      console.error(err);
+    });
+
+    response.statusCode = 200;
+    response.setHeader('Content-Type', 'application/json');
+
+    console.log(readAndParseEcxel('../upload/test.xlsx'));
+
+    const responseBody = { message: 'hello' };
+
+    response.write(JSON.stringify(responseBody));
+    response.end();
+  });
+}).listen(8081);

@@ -40,7 +40,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-import excelParser from ''
+import readAndParseEcxel from '../utils/excel-parser'
 
 @Component({})
 export default class HelloWorld extends Vue {
@@ -64,5 +64,9 @@ export default class HelloWorld extends Vue {
       ]
     }
   ];
+
+  mounted () {
+    readAndParseEcxel();
+  }
 }
 </script>

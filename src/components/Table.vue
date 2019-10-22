@@ -5,6 +5,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import {readAndParseEcxel} from '../utils/excel-parser.ts';
 @Component({})
 export default class Table extends Vue {
   public headers: object[] = [
