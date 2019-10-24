@@ -16,8 +16,9 @@
   "main": "background.js",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.2",
-    "core-js": "^3.1.2",
+    "core-js": "^3.3.3",
     "exceljs": "^3.2.0",
+    "regenerator-runtime": "^0.13.3",
     "roboto-fontface": "*",
     "vue": "^2.6.10",
     "vue-property-decorator": "^8.1.0",

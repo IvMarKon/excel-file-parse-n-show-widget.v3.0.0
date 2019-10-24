@@ -1,4 +1,14 @@
-import * as Excel from 'exceljs';
+require('core-js/modules/es.promise');
+require('core-js/modules/es.object.assign');
+require('core-js/modules/es.object.keys');
+require('regenerator-runtime/runtime');
+
+
+const ExcelJS = require('exceljs/dist/es5');
+
+
+
+// import * as Excel from 'exceljs';
 
 const titleNames = [
   '',
@@ -22,7 +32,7 @@ const titleNames = [
 ];
 
 const readAndParseEcxel = async (fileName: string) => {
-  const workbook = new Excel.Workbook();
+  const workbook = new ExcelJS.Workbook();
   const data = await workbook.xlsx.readFile(fileName);
   const workSheet = data.getWorksheet('ИСХОДНЫЕ И РАССЧИТАННЫЕ ДАННЫЕ');
   const rowLength = workSheet.rowCount;

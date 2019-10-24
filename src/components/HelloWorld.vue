@@ -66,7 +66,11 @@ export default class HelloWorld extends Vue {
   ];
 
   mounted () {
-    readAndParseEcxel();
+    readAndParseEcxel('/Users/ihor/Documents/Projects/electron-exel/excel-file-parse-n-show-widget.v3.0.0/upload/test.xlsx').then(data => {
+      console.log('info:', data);
+    }).catch(err => {
+      console.log('err:', err);
+    });
   }
 }
 </script>
