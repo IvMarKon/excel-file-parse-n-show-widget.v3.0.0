@@ -5,7 +5,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: '/group/:groupname/subgroup/:subgroupname',
     name: 'Table',
     component: () => import('../components/Table.vue'),
   },

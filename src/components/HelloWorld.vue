@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-navigation-drawer v-model="drawer" app>
-      <v-treeview :items="treeItems">
+      <v-treeview :items="treeItems" open-on-click="true">
         <template slot="label" slot-scope="props">
           <router-link :to="props.item.to" v-if="props.item.to">{{ props.item.name }}</router-link>
           <span v-else>{{ props.item.name }}</span>
@@ -40,37 +40,59 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-import readAndParseEcxel from '../utils/excel-parser'
+import readAndParseEcxel from "../utils/excel-parser";
 
 @Component({})
 export default class HelloWorld extends Vue {
-  public drawer: any = false;
-  public iconColor: string = "deep-purple";
-  public treeItems: object[] = [
-    {
-      id: "g1",
-      name: "Group 1",
+  drawer = false;
+  iconColor = "deep-purple";
+  treeItems = {};
+  data = {};
+
+  updateData(data) {
+    this.data = data;
+  }
+
+  getListOfGroups() {
+    return Object.keys(this.data);
+  }
+
+  setTreeItems() {
+    return this.getListOfGroups().map((val_g: string, i: number) => ({
+      id: `g${i}`,
+      name: val_g,
       children: [
-        { id: "g1d1", name: "Diagram" },
+        { id: `g${i}d1`, name: "Diagram", to: "/chart" },
         {
-          id: "g1s1",
-          name: "Subgroup 1",
-          children: [
-            { id: "g1s1i1", name: "Item 1" },
-            { id: "g1s1i2", name: "Item 2" },
-            { id: "g1s1i3", name: "Item 3" }
-          ]
+          id: `g${i}s1`,
+          name: "Subgroups",
+          children: Object.keys(this.data[val_g]).map(
+            (val_sg: string, j: number) => ({
+              id: `g${i}i${j}`,
+              name: val_sg,
+              to: `/group/:${val_g}/subgroup/:${val_sg}`
+            })
+          )
         }
       ]
-    }
-  ];
+    }));
+  }
 
-  mounted () {
-    readAndParseEcxel('/Users/ihor/Documents/Projects/electron-exel/excel-file-parse-n-show-widget.v3.0.0/upload/test.xlsx').then(data => {
-      console.log('info:', data);
-    }).catch(err => {
-      console.log('err:', err);
-    });
+  // lifecycle hook
+  updated() {
+    console.log(this.$route);
+  }
+  mounted() {
+    readAndParseEcxel(
+      "C:\\Users\\Ivan\\Desktop\\node.js - sandbox\\excel-view-widget\\excel-widget\\upload\\test.xlsx"
+    )
+      .then(data => {
+        this.updateData(data);
+        this.treeItems = this.setTreeItems();
+      })
+      .catch(err => {
+        console.log("err:", err);
+      });
   }
 }
 </script>
