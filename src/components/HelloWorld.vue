@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-navigation-drawer v-model="drawer" app>
-      <v-treeview :items="treeItems" open-on-click="true">
+      <v-treeview :items="treeItems" :open-on-click="true">
         <template slot="label" slot-scope="props">
           <router-link :to="props.item.to" v-if="props.item.to">{{ props.item.name }}</router-link>
           <span v-else>{{ props.item.name }}</span>
@@ -88,6 +88,7 @@ export default class HelloWorld extends Vue {
     )
       .then(data => {
         this.updateData(data);
+        this.$store.commit('updateData', data);
         this.treeItems = this.setTreeItems();
       })
       .catch(err => {
