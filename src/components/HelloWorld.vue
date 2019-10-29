@@ -42,11 +42,11 @@
                 >
                     Close
                 </v-btn>
-              <v-btn
-                      @click="importFileInfo"
-              >
-                Import
-              </v-btn>
+                <v-btn
+                        @click="importFileInfo"
+                >
+                    Import
+                </v-btn>
             </v-row>
         </v-overlay>
     </div>
@@ -71,6 +71,53 @@
         data = {};
         overlay = false;
         lastFilePath = '';
+
+        resultCalculation(subGroupData: any[][]) {
+            const squareMeterArray = subGroupData.map(el => el[13]);
+            const t =1.96;
+            const j = t* this.standardDeviation(squareMeterArray) / Math.sqrt(subGroupData.length);
+            const weightedAverage = subGroupData.reduce((accumulator, currentValue) => accumulator + currentValue[12], 0) / subGroupData.reduce((accumulator, currentValue) => accumulator + currentValue[8], 0);
+            return {
+                minValue: Math.min.apply(null, squareMeterArray),
+                maxValue: Math.max.apply(null, squareMeterArray),
+                middleValue: subGroupData.reduce((accumulator, currentValue) => accumulator + currentValue[13], 0) / subGroupData.length,
+                weightedAverage,
+                median: this.median(squareMeterArray),
+                CEC: this.standardDeviation(squareMeterArray),
+                count: subGroupData.length,
+                j,
+                lowBorderByMiddle: subGroupData.reduce((accumulator, currentValue) => accumulator + currentValue[13], 0) / subGroupData.length - j,
+                lowBorderByWeightedAverage: weightedAverage - j,
+                highBorderByMiddle: subGroupData.reduce((accumulator, currentValue) => accumulator + currentValue[13], 0) / subGroupData.length + j,
+                highBorderByWeightedAverage: weightedAverage + j,
+                variation: this.standardDeviation(squareMeterArray) / subGroupData.reduce((accumulator, currentValue) => accumulator + currentValue[13], 0) / subGroupData.length,
+            };
+        }
+
+        standardDeviation(values: number[]) {
+            const average = (data: number[]) => data.reduce((sum, value) => sum + value, 0) / data.length;
+
+            const avg = average(values);
+            const diffs = values.map((value) => value - avg);
+            const squareDiffs = diffs.map((diff) => diff * diff);
+            const avgSquareDiff = average(squareDiffs);
+            return Math.sqrt(avgSquareDiff);
+        };
+
+        median(values: number[]) {
+            if (values.length === 0) return 0;
+
+            values.sort(function (a, b) {
+                return a - b;
+            });
+
+            const half = Math.floor(values.length / 2);
+
+            if (values.length % 2)
+                return values[half];
+
+            return (values[half - 1] + values[half]) / 2.0;
+        }
 
         updateData(data: any) {
             this.data = data;
@@ -106,22 +153,22 @@
             console.log(this.$route);
         }
 
-        importFileInfo () {
-          readAndParseEcxel(this.lastFilePath)
-                  .then(data => {
+        importFileInfo() {
+            readAndParseEcxel(this.lastFilePath)
+                .then(data => {
                     this.updateData(data);
                     this.$store.commit('updateData', data);
                     this.treeItems = this.setTreeItems();
                     this.overlay = false;
-                  })
-                  .catch(err => {
+                })
+                .catch(err => {
                     alert('parsing error');
                     console.log("err:", err);
-                  });
+                });
         }
 
-      onFilePicked (event: any) {
-        this.lastFilePath = event.path;
-      }
+        onFilePicked(event: any) {
+            this.lastFilePath = event.path;
+        }
     }
 </script>
